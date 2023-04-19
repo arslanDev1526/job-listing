@@ -73,7 +73,7 @@
   }
 
   .content {
-    border: none;
+    border: solid red 2px;
   }
   .position-desktop {
     /* border: solid 1px green; */
