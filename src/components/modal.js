@@ -2,14 +2,11 @@ import "./modal.css";
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-// import DropDown from "./dropdown";
-// import { useState } from "react";
+
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { CARD_Query_KEY, postCard } from "../api";
-
-
 
 export const Modall = (props) => {
   const [company, setCompany] = useState("");
@@ -24,29 +21,19 @@ export const Modall = (props) => {
 
   const [show, setShow] = useState(false);
 
-  // const [updated, setUpdated] = useState("");
-  // const [error, setError] = useState("");
-  // const [language, setLanguage] = useState([]);
   const [languagechange, setLanguagechange] = useState("");
-  // const [inputError, setInputError] = useState(false);
+
   const [posted, setPosted] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  // onSuccess: () => {
-  //   queryClient.invalidateQueries('todos')
-  //   queryClient.invalidateQueries('reminders')
-  // },
-
 
   const queryClient = useQueryClient();
 
   const mutation = useMutation(postCard, {
     onSuccess: () => {
       queryClient.invalidateQueries(CARD_Query_KEY);
-    handleClose()
-
+      handleClose();
     },
   });
 
@@ -59,48 +46,24 @@ export const Modall = (props) => {
       data: {
         company,
         job_role: jobrole,
-        new:jobcheck,
+        new: jobcheck,
         feature: jobfeature,
-        job_position:jobposition,
+        job_position: jobposition,
         job_level: joblevel,
         posted: postedtime,
         contract,
-        location:joblocation,
+        location: joblocation,
       },
     };
 
     mutation.mutate(payload);
-    //mutation.postCard(payload)
-    //postCard
+
     console.log("save", payload);
   };
-  // const handleLanguageClick = () => {
-  //   if (languagechange.length <= 5) {
-  //     setLanguage([...language, languagechange]);
-  //     setLanguagechange("");
-  //     setInputError(false);
-  //   } else {
-  //     setInputError(true);
-  //   }
-  // };
 
   const handleChange = (e) => {
     setJobRole(e.target.value);
   };
-
-  // const handleClick = () => {
-  //   if (jobrole.length > 15) {
-  //     setError("Max 15 char allowed");
-  //   } else {
-  //     setUpdated(jobrole);
-  //     setError("");
-  //     setJobRole(" ");
-  //   }
-  // };
-
-  // const handleLanguageDelete = (index) => {
-  //   setLanguage(language.filter((_, i) => i !== index));
-  // };
 
   return (
     <>
@@ -109,8 +72,6 @@ export const Modall = (props) => {
           Add Job
         </button>
       </div>
-
-      {/* <Modall/> */}
 
       <Modal
         show={show}
@@ -138,20 +99,12 @@ export const Modall = (props) => {
             value={company}
           />
 
-          {/* <button onClick={handleClick} class="btn btn-primary mx-auto">
-            Show text
-          </button> */}
-
-          {/* <h2> updated: {updated} </h2>
-          {error && <p style={{ color: "red" }}>{error}</p>} */}
-
           <Form.Check
             type="checkbox"
             label="New"
             checked={jobcheck}
             onChange={(event) => {
               setJobCheck(event.target.checked);
-              // console.log("Jobcheck value:", event.target.checked);
             }}
           />
 
@@ -215,7 +168,7 @@ export const Modall = (props) => {
           />
           <br />
           <br />
-          {/* {console.log(setJobCheck , "checked here")} */}
+
           <Form.Select
             value={contract}
             onChange={(event) => {
@@ -242,16 +195,6 @@ export const Modall = (props) => {
             value={joblocation}
           />
 
-          {/* <Form.Select
-            className="custom-select"
-            aria-label="Default select example"
-          >
-            <option>Open this select menu</option>
-            <option>One</option>
-            <option>Two</option>
-            <option>Three</option>
-          </Form.Select> */}
-
           <br />
           <label>coding language:</label>
           <input
@@ -263,30 +206,6 @@ export const Modall = (props) => {
             type="text"
             placeholder="languages"
           />
-          {/* <ul>
-            {language.map((item, index) => (
-              <li key={index}>
-                {item}
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  onClick={() => handleLanguageDelete(index)}
-                />
-              </li>
-            ))}
-          </ul> */}
-
-          {/* {inputError && <p>Error: Input must be 5 characters or less.</p>} */}
-
-          <br />
-
-          {/* {language.length < 5 && (
-            <button
-              class="btn btn-primary mx-auto"
-              onClick={handleLanguageClick}
-            >
-              Add More
-            </button>
-          )} */}
         </Modal.Body>
 
         <Modal.Footer>
