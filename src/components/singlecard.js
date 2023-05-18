@@ -25,8 +25,8 @@ export const SingleCard = (props) => {
             <div>
               <p className="text-secondary">
                 {" "}
-                <span> {props.postedAt} </span>. <span> {props.contract} </span>{" "}
-                . <span> {props.location} </span>{" "}
+                <span> {props.postedAt} </span>  <span> {props.contract} </span>{" "}
+                 <span> {props.location} </span>{" "}
               </p>{" "}
             </div>
           </div>
@@ -35,13 +35,15 @@ export const SingleCard = (props) => {
         <div className="languages d-flex flex-wrap mt-4">
           <p> {props.role} </p>
           <p> {props.level} </p>
-          {props.languages.map((language, index) => {
-            return <p key={index}>{language} </p>;
-          })}
+          {/* {props.languages.map((language,xy) => {
+            return <p key={xy}>{language} </p>;
+          })} */}
 
-          {props.tools.map((tool, index) => (
-            <p key={index}>{tool}</p>
-          ))}
+          <p> {props.language} </p>
+
+          {/* {props.tools.map((tool,ab) => (
+            <p key={ab}>{tool}</p>
+          ))} */}
         </div>
       </div>
     </>

@@ -1,14 +1,31 @@
 
 // import './App.css';
-import { MainPage } from './components/mainpage';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { MainPage } from './components/mainpage.js';
+import Apitesting from './components/apitesting';
+import Postapi from './components/postapi';
+import Deleteapi from './components/deleteapi';
+import  DropDown  from './components/dropdown';
+import { MyForm } from './components/query.js';
 
 
 function App() {
   return (
     <div className="App">
 
+
      
       <MainPage/>
+      {/* <MyForm/> */}
+      {/* <DropDown/> */}
+
+      {/* <Apitesting/> */}
+      {/* <Postapi/> */}
+      {/* <Deleteapi/> */}
+
+
+     
     
     </div>
   );
