@@ -35,15 +35,11 @@ export const SingleCard = (props) => {
         <div className="languages d-flex flex-wrap mt-4">
           <p> {props.role} </p>
           <p> {props.level} </p>
-          {/* {props.languages.map((language,xy) => {
-            return <p key={xy}>{language} </p>;
-          })} */}
+        
 
           <p> {props.language} </p>
 
-          {/* {props.tools.map((tool,ab) => (
-            <p key={ab}>{tool}</p>
-          ))} */}
+         
         </div>
       </div>
     </>
