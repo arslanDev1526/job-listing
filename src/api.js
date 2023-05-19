@@ -1,7 +1,7 @@
 export const CARD_Query_KEY = "CARD"
 
 export const fetchCard = () => {
-  return fetch("http://localhost:1337/api/cards/");
+  return fetch("http://localhost:1337/api/cards/").then((res) => res.json());
 };
 
 export const postCard = (card) => {
