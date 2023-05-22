@@ -4,26 +4,22 @@ import { Button, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { CARD_Query_KEY, postCard } from "../api";
 
 export const Modall = (props) => {
-  const [company, setCompany] = useState("");
-  const [jobrole, setJobRole] = useState("");
+  const [company, setCompany] = useState(props.company);
+  const [jobrole, setJobRole] = useState(props.role);
   const [jobcheck, setJobCheck] = useState(false);
   const [jobfeature, setJobFeature] = useState(false);
-  const [jobposition, setJobPosition] = useState(" ");
-  const [joblevel, setJobLevel] = useState(" ");
-  const [postedtime, setPostedTime] = useState("");
-  const [contract, setContract] = useState("");
-  const [joblocation, setJobLocation] = useState("");
+  const [jobposition, setJobPosition] = useState(props.position);
+  const [joblevel, setJobLevel] = useState(props.level);
+  const [postedtime, setPostedTime] = useState(props.postedAt);
+  const [contract, setContract] = useState(props.contract);
+  const [joblocation, setJobLocation] = useState(props.location);
 
   const [show, setShow] = useState(false);
-
   const [languagechange, setLanguagechange] = useState("");
-
-  const [posted, setPosted] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -36,10 +32,6 @@ export const Modall = (props) => {
       handleClose();
     },
   });
-
-  if (mutation.isSuccess) {
-    console.log("Card is reated successfully");
-  }
 
   const saveJob = () => {
     const payload = {
@@ -59,6 +51,16 @@ export const Modall = (props) => {
     mutation.mutate(payload);
 
     console.log("save", payload);
+    setCompany("");
+    setJobRole(" ");
+    setJobCheck(false);
+    setJobFeature(false);
+    setJobPosition("");
+    setJobLevel("");
+    setPostedTime("");
+    setContract("");
+    setJobLocation("");
+    setLanguagechange("");
   };
 
   const handleChange = (e) => {
@@ -85,20 +87,20 @@ export const Modall = (props) => {
           <Modal.Title>Create Job</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-container">
-          <br />
-          <label>company:</label>
-
-          <input
-            onChange={(event) => {
-              setCompany(event.target.value);
-              console.log("company name:", event.target.value);
-            }}
-            name="job level"
-            type="text"
-            placeholder="company name"
-            value={company}
-          />
-
+          <div>
+            <label>Company</label>
+            <br />
+            <input
+              onChange={(event) => {
+                setCompany(event.target.value);
+                console.log("company name:", event.target.value);
+              }}
+              name="job level"
+              type="text"
+              placeholder="company"
+              value={company}
+            />
+          </div>
           <Form.Check
             type="checkbox"
             label="New"
@@ -117,59 +119,61 @@ export const Modall = (props) => {
               console.log("Jobcheck value:", event.target.checked);
             }}
           />
+          <div>
+            <label>Job Position</label>
+            <br />
+            <input
+              onChange={(event) => {
+                setJobPosition(event.target.value);
+                console.log("JobPosition value:", event.target.value);
+              }}
+              name="job position"
+              type="text"
+              placeholder="position"
+              value={jobposition}
+            />
+          </div>
+          <div>
+            <label>Job Role</label>
+            <br />
+            <input
+              onChange={handleChange}
+              name="job"
+              type="text"
+              placeholder="role"
+              value={jobrole}
+            />
+          </div>
+          <div>
+            <label>Job level</label>
+            <br />
+            <input
+              onChange={(event) => {
+                setJobLevel(event.target.value);
+                console.log("Joblevel value:", event.target.value);
+              }}
+              name="job level"
+              type="text"
+              placeholder="level"
+              value={joblevel}
+            />
+          </div>
 
-          <label>Job Position:</label>
-
-          <input
-            onChange={(event) => {
-              setJobPosition(event.target.value);
-              console.log("JobPosition value:", event.target.value);
-            }}
-            name="job position"
-            type="text"
-            placeholder="job position"
-            value={jobposition}
-          />
-
-          <label>Job Role:</label>
-
-          <input
-            onChange={handleChange}
-            name="job"
-            type="text"
-            placeholder="job role"
-            value={jobrole}
-          />
-          <br />
-          <label>Job level:</label>
-
-          <input
-            onChange={(event) => {
-              setJobLevel(event.target.value);
-              console.log("Joblevel value:", event.target.value);
-            }}
-            name="job level"
-            type="text"
-            placeholder="job level"
-            value={joblevel}
-          />
-
-          <br />
-
-          <label> Post Time:</label>
-
-          <input
-            type="text"
-            value={postedtime}
-            onChange={(event) => {
-              setPostedTime(event.target.value);
-              console.log("PostedTime value:", event.target.value);
-            }}
-          />
-          <br />
-          <br />
-
+          <div>
+            <label>Post Time</label>
+            <br />
+            <input
+              type="text"
+              value={postedtime}
+              placeholder="time"
+              onChange={(event) => {
+                setPostedTime(event.target.value);
+                console.log("PostedTime value:", event.target.value);
+              }}
+            />
+          </div>
           <Form.Select
+            className="form-select"
             value={contract}
             onChange={(event) => {
               setContract(event.target.value);
@@ -181,31 +185,20 @@ export const Modall = (props) => {
             <option value="Part-time">Part-time</option>
           </Form.Select>
 
-          <br />
-          <label>Job location:</label>
-
-          <input
-            onChange={(event) => {
-              setJobLocation(event.target.value);
-              console.log("Joblevel value:", event.target.value);
-            }}
-            name="job level"
-            type="text"
-            placeholder="job location"
-            value={joblocation}
-          />
-
-          <br />
-          <label>coding language:</label>
-          <input
-            value={languagechange}
-            onChange={(e) => {
-              setLanguagechange(e.target.value);
-              console.log("language:", e.target.value);
-            }}
-            type="text"
-            placeholder="languages"
-          />
+          <div>
+            <label>Job location</label>
+            <br />
+            <input
+              onChange={(event) => {
+                setJobLocation(event.target.value);
+                console.log("Joblevel value:", event.target.value);
+              }}
+              name="job level"
+              type="text"
+              placeholder="location"
+              value={joblocation}
+            />
+          </div>
         </Modal.Body>
 
         <Modal.Footer>

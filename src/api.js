@@ -15,5 +15,22 @@ export const postCard = (card) => {
   });
 };
 
+export const deleteCard = (id) => {
+  return fetch(`http://localhost:1337/api/cards/${id}`, {
+    method: "DELETE",
+  })
+}
+
+export const updateCard = (id, cardData) => {
+  return fetch(`http://localhost:1337/api/cards/${id}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(cardData),
+  });
+};
+
 
    

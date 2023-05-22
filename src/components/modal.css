@@ -1,7 +1,38 @@
 .modal-container {
-  height: 500px;
+  height: 600px;
+
+  display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+ /* align-items: center; */
+
+ /* gap: 10px; */
+
+
+  /* border: solid black 1px; */
+
+
+}
+
+input { 
+  width: 80%;
 }
 
 .custom-select {
   width: 250px;
+}
+
+option { 
+  width: 90%;
+}
+
+label{ 
+  padding-bottom: 5px;
+}
+
+
+.form-select { 
+  /* border: solid black 1px; */
+
+  width: 80%;
 }
