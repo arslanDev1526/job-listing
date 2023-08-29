@@ -2,156 +2,140 @@ import "./modal.css";
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-// import DropDown from "./dropdown";
-// import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { CARD_Query_KEY, postCard } from "../api";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-
+import { useMutation, useQueryClient } from "react-query";
+import { CARD_Query_KEY, postCard, updateCard } from "../api";
 
 export const Modall = (props) => {
-  const [company, setCompany] = useState("");
-  const [jobrole, setJobRole] = useState("");
+  const [company, setCompany] = useState(props.company);
+  const [jobrole, setJobRole] = useState(props.role);
   const [jobcheck, setJobCheck] = useState(false);
   const [jobfeature, setJobFeature] = useState(false);
-  const [jobposition, setJobPosition] = useState(" ");
-  const [joblevel, setJobLevel] = useState(" ");
-  const [postedtime, setPostedTime] = useState("");
-  const [contract, setContract] = useState("");
-  const [joblocation, setJobLocation] = useState("");
-
-  const [show, setShow] = useState(false);
-
-  // const [updated, setUpdated] = useState("");
-  // const [error, setError] = useState("");
-  // const [language, setLanguage] = useState([]);
+  const [jobposition, setJobPosition] = useState(props.position);
+  const [joblevel, setJobLevel] = useState(props.level);
+  const [postedtime, setPostedTime] = useState(props.postedAt);
+  const [contract, setContract] = useState(props.contract);
+  const [joblocation, setJobLocation] = useState(props.location);
   const [languagechange, setLanguagechange] = useState("");
-  // const [inputError, setInputError] = useState(false);
-  const [posted, setPosted] = useState("");
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  // onSuccess: () => {
-  //   queryClient.invalidateQueries('todos')
-  //   queryClient.invalidateQueries('reminders')
-  // },
-
+  const isEditMode = props.id ? true : false;
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(postCard, {
+  const createJobMutation = useMutation(postCard, {
     onSuccess: () => {
       queryClient.invalidateQueries(CARD_Query_KEY);
-    handleClose()
-
+      props.handleClose();
     },
   });
 
-  if (mutation.isSuccess) {
-    console.log("Card is reated successfully");
-  }
+  const updateJobMutation = useMutation(updateCard, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(CARD_Query_KEY);
+      props.handleClose();
+    },
+  });
 
   const saveJob = () => {
     const payload = {
       data: {
         company,
         job_role: jobrole,
-        new:jobcheck,
+        new: jobcheck,
         feature: jobfeature,
-        job_position:jobposition,
+        job_position: jobposition,
         job_level: joblevel,
         posted: postedtime,
         contract,
-        location:joblocation,
+        location: joblocation,
       },
     };
 
-    mutation.mutate(payload);
-    //mutation.postCard(payload)
-    //postCard
+    if (isEditMode) {
+      updateJobMutation.mutate(
+        { id: props.id, payload },
+
+        {
+          onSuccess: () => {
+            toast.success("job updated successfully");
+            props.handleClose();
+          },
+          onError: () => {
+            toast.error("Failed to update job");
+          },
+        }
+      );
+    } else {
+      createJobMutation.mutate(payload, { 
+        onSuccess: () => { 
+
+          toast.success("job created successfully");
+          props.handleClose();
+        },
+
+        onError: () => { 
+          toast.error("Failed to create the job");
+        }
+      });
+    }
+
     console.log("save", payload);
+    setCompany("");
+    setJobRole(" ");
+    setJobCheck(false);
+    setJobFeature(false);
+    setJobPosition("");
+    setJobLevel("");
+    setPostedTime("");
+    setContract("");
+    setJobLocation("");
+    setLanguagechange("");
   };
-  // const handleLanguageClick = () => {
-  //   if (languagechange.length <= 5) {
-  //     setLanguage([...language, languagechange]);
-  //     setLanguagechange("");
-  //     setInputError(false);
-  //   } else {
-  //     setInputError(true);
-  //   }
-  // };
 
   const handleChange = (e) => {
     setJobRole(e.target.value);
   };
 
-  // const handleClick = () => {
-  //   if (jobrole.length > 15) {
-  //     setError("Max 15 char allowed");
-  //   } else {
-  //     setUpdated(jobrole);
-  //     setError("");
-  //     setJobRole(" ");
-  //   }
-  // };
-
-  // const handleLanguageDelete = (index) => {
-  //   setLanguage(language.filter((_, i) => i !== index));
-  // };
-
   return (
     <>
-      <div class="text-center">
-        <button onClick={handleShow} class="btn btn-primary mx-auto">
-          Add Job
-        </button>
-      </div>
+   
 
-      {/* <Modall/> */}
-
-      <Modal
-        show={show}
-        onHide={handleClose}
+      <Modal className="modal"
+        show={props.show}
+        onHide={props.handleClose}
         {...props}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Create Job</Modal.Title>
+          <Modal.Title>{isEditMode ? "Edit Job" : "Create Job"}</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-container">
-          <br />
-          <label>company:</label>
+        <Modal.Body className="modal-container d-flex justify-content-center">
 
-          <input
-            onChange={(event) => {
-              setCompany(event.target.value);
-              console.log("company name:", event.target.value);
-            }}
-            name="job level"
-            type="text"
-            placeholder="company name"
-            value={company}
-          />
-
-          {/* <button onClick={handleClick} class="btn btn-primary mx-auto">
-            Show text
-          </button> */}
-
-          {/* <h2> updated: {updated} </h2>
-          {error && <p style={{ color: "red" }}>{error}</p>} */}
-
+          <div  className="d-flex flex-column gap-3 sab-container "> 
+          <div>
+            <label>Company</label>
+            <br />
+            <input className="p-1"
+              onChange={(event) => {
+                setCompany(event.target.value);
+                console.log("company name:", event.target.value);
+              }}
+              name="job level"
+              type="text"
+              placeholder="company"
+              value={company}
+            />
+          </div>
           <Form.Check
             type="checkbox"
             label="New"
             checked={jobcheck}
             onChange={(event) => {
               setJobCheck(event.target.checked);
-              // console.log("Jobcheck value:", event.target.checked);
             }}
           />
 
@@ -164,59 +148,61 @@ export const Modall = (props) => {
               console.log("Jobcheck value:", event.target.checked);
             }}
           />
+          <div>
+            <label>Job Position</label>
+            <br />
+            <input className="p-1"
+              onChange={(event) => {
+                setJobPosition(event.target.value);
+                // console.log("JobPosition value:", event.target.value);
+              }}
+              name="job position"
+              type="text"
+              placeholder="position"
+              value={jobposition}
+            />
+          </div>
+          <div>
+            <label>Job Role</label>
+            <br />
+            <input className="p-1"
+              onChange={handleChange}
+              name="job"
+              type="text"
+              placeholder="role"
+              value={jobrole}
+            />
+          </div>
+          <div>
+            <label>Job level</label>
+            <br />
+            <input className="p-1"
+              onChange={(event) => {
+                setJobLevel(event.target.value);
+                console.log("Joblevel value:", event.target.value);
+              }}
+              name="job level"
+              type="text"
+              placeholder="level"
+              value={joblevel}
+            />
+          </div>
 
-          <label>Job Position:</label>
-
-          <input
-            onChange={(event) => {
-              setJobPosition(event.target.value);
-              console.log("JobPosition value:", event.target.value);
-            }}
-            name="job position"
-            type="text"
-            placeholder="job position"
-            value={jobposition}
-          />
-
-          <label>Job Role:</label>
-
-          <input
-            onChange={handleChange}
-            name="job"
-            type="text"
-            placeholder="job role"
-            value={jobrole}
-          />
-          <br />
-          <label>Job level:</label>
-
-          <input
-            onChange={(event) => {
-              setJobLevel(event.target.value);
-              console.log("Joblevel value:", event.target.value);
-            }}
-            name="job level"
-            type="text"
-            placeholder="job level"
-            value={joblevel}
-          />
-
-          <br />
-
-          <label> Post Time:</label>
-
-          <input
-            type="text"
-            value={postedtime}
-            onChange={(event) => {
-              setPostedTime(event.target.value);
-              console.log("PostedTime value:", event.target.value);
-            }}
-          />
-          <br />
-          <br />
-          {/* {console.log(setJobCheck , "checked here")} */}
+          <div>
+            <label>Post Time</label>
+            <br />
+            <input className="p-1"
+              type="text"
+              value={postedtime}
+              placeholder="time"
+              onChange={(event) => {
+                setPostedTime(event.target.value);
+                console.log("PostedTime value:", event.target.value);
+              }}
+            />
+          </div>
           <Form.Select
+            className="form-select"
             value={contract}
             onChange={(event) => {
               setContract(event.target.value);
@@ -228,74 +214,30 @@ export const Modall = (props) => {
             <option value="Part-time">Part-time</option>
           </Form.Select>
 
-          <br />
-          <label>Job location:</label>
-
-          <input
-            onChange={(event) => {
-              setJobLocation(event.target.value);
-              console.log("Joblevel value:", event.target.value);
-            }}
-            name="job level"
-            type="text"
-            placeholder="job location"
-            value={joblocation}
-          />
-
-          {/* <Form.Select
-            className="custom-select"
-            aria-label="Default select example"
-          >
-            <option>Open this select menu</option>
-            <option>One</option>
-            <option>Two</option>
-            <option>Three</option>
-          </Form.Select> */}
-
-          <br />
-          <label>coding language:</label>
-          <input
-            value={languagechange}
-            onChange={(e) => {
-              setLanguagechange(e.target.value);
-              console.log("language:", e.target.value);
-            }}
-            type="text"
-            placeholder="languages"
-          />
-          {/* <ul>
-            {language.map((item, index) => (
-              <li key={index}>
-                {item}
-                <FontAwesomeIcon
-                  icon={faTrash}
-                  onClick={() => handleLanguageDelete(index)}
-                />
-              </li>
-            ))}
-          </ul> */}
-
-          {/* {inputError && <p>Error: Input must be 5 characters or less.</p>} */}
-
-          <br />
-
-          {/* {language.length < 5 && (
-            <button
-              class="btn btn-primary mx-auto"
-              onClick={handleLanguageClick}
-            >
-              Add More
-            </button>
-          )} */}
+          <div>
+            <label>Job location</label>
+            <br />
+            <input className="p-1"
+              onChange={(event) => {
+                setJobLocation(event.target.value);
+                console.log("Joblevel value:", event.target.value);
+              }}
+              name="job level"
+              type="text"
+              placeholder="location"
+              value={joblocation}
+            />
+          </div>
+          </div>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button className="px-3 py-1 rounded modal-btn"  onClick={props.handleClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={saveJob}>
-            Save Changes
-          </Button>
+          </button>
+          <button className="px-3 py-1 rounded modal-btn"  onClick={saveJob}>
+            {isEditMode ? "Update" : "Save"}
+          </button>
         </Modal.Footer>
       </Modal>
     </>

@@ -1,7 +1,48 @@
-.modal-container {
-  height: 500px;
+.sab-container {
+  width: 19rem;
 }
 
-.custom-select {
-  width: 250px;
+input {
+  width: 100%;
+  border: 2px solid #438d8d;
+  border-radius: 5px;
+}
+
+input:focus {
+  outline: none;
+}
+
+label {
+  padding-bottom: 3px;
+}
+
+.form-select {
+  border: 2px solid #438d8d;
+  margin-top: 8px;
+}
+
+.form-select:focus {
+  box-shadow: none;
+  border-color: #438d8d;
+}
+
+.modal-btn {
+  border: none;
+  background-color: #438d8d;
+}
+
+.modal-btn:hover {
+  opacity: 0.9;
+}
+
+@media (min-width: 768px) {
+  .sab-container {
+    width: 27rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sab-container {
+    width: 40rem;
+  }
 }

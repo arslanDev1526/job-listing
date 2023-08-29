@@ -1,34 +1,40 @@
-import React from "react";
-// import HeaderImage from './mages/'
+import React, { useState } from "react";
 import { Modall } from "./modal.js";
 import { SingleCard } from "./singlecard.js";
-import "./mainpage.css";
 import { useQuery } from "react-query";
-
 import "./mainpage.css";
 import { CARD_Query_KEY, fetchCard } from "../api.js";
+import { MobileImg } from "./images/mobileimg.js";
+import { DesktopImg } from "./images/desktopimg.js";
 
 export const MainPage = () => {
-  // const [card, setCard] = useState({});
-
-  // const { isLoading, error, data } = useQuery(
-  //   "mydata",
-  //   () => fetch("http://localhost:1337/api/cards/").then((res) => res.json())
-  //   // .then((card) =>setCard(card))
-  // );
-
+  const [show, setShow] = useState(false);
   const { isLoading, error, data } = useQuery(CARD_Query_KEY, fetchCard);
   if (isLoading) return <div> Dataloading.... </div>;
-
   if (error) return <div> Error: {error.message} </div>;
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
     <>
-      <div className="main-container">
-        <img className="header-img" />
+      <div className="main-container w-100 ">
+        <div className="mobile-img d-sm-none">
+          {" "}
+          <MobileImg />{" "}
+        </div>
+        <div className="desktop-img d-none d-sm-block">
+          {" "}
+          <DesktopImg />{" "}
+        </div>
 
-        <Modall />
+        <div className="d-flex justify-content-center align-items-center">
+          <button onClick={handleShow}    type="button" className="btnn p-2 rounded ">
+            Add Job
+          </button>
+        </div>
 
+        <Modall show={show} handleClose={handleClose} />
         <div className="map-data">
           {data?.data &&
             data.data.map((item) => {
@@ -36,7 +42,6 @@ export const MainPage = () => {
                 <SingleCard
                   id={item.id}
                   company={item.attributes.company}
-                  // logo={item.logo}
                   new={item.attributes.new}
                   featured={item.attributes.featured}
                   position={item.attributes.job_position}
@@ -45,38 +50,11 @@ export const MainPage = () => {
                   postedAt={item.attributes.posted}
                   contract={item.attributes.contract}
                   location={item.attributes.location}
-                  // languages={item.attriutes.languages}
-                  // tools={item.tools}
                 />
               );
             })}
         </div>
       </div>
     </>
-
-    // <>
-    //   <h1> tested dataTATATA </h1>
-    //   {data?.data &&
-    //     data.data.map((item) => (
-    //       <div key={item.id}>
-    //         <h2>{item.attributes.company}</h2>
-    //         <p>{item.attributes.contract}</p>
-
-    //         {item.attributes.feature === true ? <p> feature</p> : null }
-    //         <p>{item.attributes.feature}</p>
-    //         <p>{item.attributes.job_level}</p>
-    //         <p>{item.attributes.job_position}</p>
-    //         <p>{item.attributes.job_role}</p>
-    //         <p>{item.attributes.location}</p>
-    //         <p>{item.attributes.posted}</p>
-
-    //       {item.attributes.new === true ?  <p> new </p> : null }
-
-    //         {/* <p>{item.id}</p> */}
-    //         {/* <button onClick={() => handleDelete(item.id)}>Delete</button> */}
-    //       </div>
-    //     ))}
-    //   {console.log(data)}
-    // </>
   );
 };
