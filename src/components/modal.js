@@ -2,10 +2,11 @@ import "./modal.css";
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { useMutation, useQuery, useQueryClient } from "react-query";
-
-import { CARD_Query_KEY, postCard } from "../api";
+import { useMutation, useQueryClient } from "react-query";
+import { CARD_Query_KEY, postCard, updateCard } from "../api";
 
 export const Modall = (props) => {
   const [company, setCompany] = useState(props.company);
@@ -17,19 +18,23 @@ export const Modall = (props) => {
   const [postedtime, setPostedTime] = useState(props.postedAt);
   const [contract, setContract] = useState(props.contract);
   const [joblocation, setJobLocation] = useState(props.location);
-
-  const [show, setShow] = useState(false);
   const [languagechange, setLanguagechange] = useState("");
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const isEditMode = props.id ? true : false;
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(postCard, {
+  const createJobMutation = useMutation(postCard, {
     onSuccess: () => {
       queryClient.invalidateQueries(CARD_Query_KEY);
-      handleClose();
+      props.handleClose();
+    },
+  });
+
+  const updateJobMutation = useMutation(updateCard, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(CARD_Query_KEY);
+      props.handleClose();
     },
   });
 
@@ -48,7 +53,33 @@ export const Modall = (props) => {
       },
     };
 
-    mutation.mutate(payload);
+    if (isEditMode) {
+      updateJobMutation.mutate(
+        { id: props.id, payload },
+
+        {
+          onSuccess: () => {
+            toast.success("job updated successfully");
+            props.handleClose();
+          },
+          onError: () => {
+            toast.error("Failed to update job");
+          },
+        }
+      );
+    } else {
+      createJobMutation.mutate(payload, { 
+        onSuccess: () => { 
+
+          toast.success("job created successfully");
+          props.handleClose();
+        },
+
+        onError: () => { 
+          toast.error("Failed to create the job");
+        }
+      });
+    }
 
     console.log("save", payload);
     setCompany("");
@@ -69,28 +100,26 @@ export const Modall = (props) => {
 
   return (
     <>
-      <div class="text-center">
-        <button onClick={handleShow} class="btn btn-primary mx-auto">
-          Add Job
-        </button>
-      </div>
+   
 
-      <Modal
-        show={show}
-        onHide={handleClose}
+      <Modal className="modal"
+        show={props.show}
+        onHide={props.handleClose}
         {...props}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Create Job</Modal.Title>
+          <Modal.Title>{isEditMode ? "Edit Job" : "Create Job"}</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="modal-container">
+        <Modal.Body className="modal-container d-flex justify-content-center">
+
+          <div  className="d-flex flex-column gap-3 sab-container "> 
           <div>
             <label>Company</label>
             <br />
-            <input
+            <input className="p-1"
               onChange={(event) => {
                 setCompany(event.target.value);
                 console.log("company name:", event.target.value);
@@ -122,10 +151,10 @@ export const Modall = (props) => {
           <div>
             <label>Job Position</label>
             <br />
-            <input
+            <input className="p-1"
               onChange={(event) => {
                 setJobPosition(event.target.value);
-                console.log("JobPosition value:", event.target.value);
+                // console.log("JobPosition value:", event.target.value);
               }}
               name="job position"
               type="text"
@@ -136,7 +165,7 @@ export const Modall = (props) => {
           <div>
             <label>Job Role</label>
             <br />
-            <input
+            <input className="p-1"
               onChange={handleChange}
               name="job"
               type="text"
@@ -147,7 +176,7 @@ export const Modall = (props) => {
           <div>
             <label>Job level</label>
             <br />
-            <input
+            <input className="p-1"
               onChange={(event) => {
                 setJobLevel(event.target.value);
                 console.log("Joblevel value:", event.target.value);
@@ -162,7 +191,7 @@ export const Modall = (props) => {
           <div>
             <label>Post Time</label>
             <br />
-            <input
+            <input className="p-1"
               type="text"
               value={postedtime}
               placeholder="time"
@@ -188,7 +217,7 @@ export const Modall = (props) => {
           <div>
             <label>Job location</label>
             <br />
-            <input
+            <input className="p-1"
               onChange={(event) => {
                 setJobLocation(event.target.value);
                 console.log("Joblevel value:", event.target.value);
@@ -199,15 +228,16 @@ export const Modall = (props) => {
               value={joblocation}
             />
           </div>
+          </div>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button className="px-3 py-1 rounded modal-btn"  onClick={props.handleClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={saveJob}>
-            Save Changes
-          </Button>
+          </button>
+          <button className="px-3 py-1 rounded modal-btn"  onClick={saveJob}>
+            {isEditMode ? "Update" : "Save"}
+          </button>
         </Modal.Footer>
       </Modal>
     </>

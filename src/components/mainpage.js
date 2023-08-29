@@ -1,24 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modall } from "./modal.js";
 import { SingleCard } from "./singlecard.js";
-import "./mainpage.css";
 import { useQuery } from "react-query";
 import "./mainpage.css";
 import { CARD_Query_KEY, fetchCard } from "../api.js";
-
+import { MobileImg } from "./images/mobileimg.js";
+import { DesktopImg } from "./images/desktopimg.js";
 
 export const MainPage = () => {
+  const [show, setShow] = useState(false);
   const { isLoading, error, data } = useQuery(CARD_Query_KEY, fetchCard);
   if (isLoading) return <div> Dataloading.... </div>;
   if (error) return <div> Error: {error.message} </div>;
-  
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <>
-      <div className="main-container">
-        <img className="header-img" />
+      <div className="main-container w-100 ">
+        <div className="mobile-img d-sm-none">
+          {" "}
+          <MobileImg />{" "}
+        </div>
+        <div className="desktop-img d-none d-sm-block">
+          {" "}
+          <DesktopImg />{" "}
+        </div>
 
-        <Modall />
+        <div className="d-flex justify-content-center align-items-center">
+          <button onClick={handleShow}    type="button" className="btnn p-2 rounded ">
+            Add Job
+          </button>
+        </div>
 
+        <Modall show={show} handleClose={handleClose} />
         <div className="map-data">
           {data?.data &&
             data.data.map((item) => {
@@ -34,7 +50,6 @@ export const MainPage = () => {
                   postedAt={item.attributes.posted}
                   contract={item.attributes.contract}
                   location={item.attributes.location}
-                 
                 />
               );
             })}
