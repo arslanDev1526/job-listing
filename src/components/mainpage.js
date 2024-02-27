@@ -10,8 +10,8 @@ import { DesktopImg } from "./images/desktopimg.js";
 export const MainPage = () => {
   const [show, setShow] = useState(false);
   const { isLoading, error, data } = useQuery(CARD_Query_KEY, fetchCard);
-  if (isLoading) return <div> Dataloading.... </div>;
-  if (error) return <div> Error: {error.message} </div>;
+  // if (isLoading) return <div> Dataloading.... </div>;
+  // if (error) return <div> Error: {error.message} </div>;
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
