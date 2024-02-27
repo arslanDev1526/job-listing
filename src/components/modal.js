@@ -100,8 +100,6 @@ export const Modall = (props) => {
 
   return (
     <>
-   
-
       <Modal className="modal"
         show={props.show}
         onHide={props.handleClose}
@@ -154,7 +152,6 @@ export const Modall = (props) => {
             <input className="p-1"
               onChange={(event) => {
                 setJobPosition(event.target.value);
-                // console.log("JobPosition value:", event.target.value);
               }}
               name="job position"
               type="text"

@@ -11,7 +11,6 @@
 
 .main-container {
   background-color: #effafa;
-
 }
 
 @media (min-width: 768px) {
@@ -32,13 +31,11 @@
   }
 }
 
-
 @media (min-width: 1200px) {
   .desktop-img {
     margin-bottom: 25px;
     width: 79rem;
     background-color: #5ba4a4;
- 
   }
 }
 
